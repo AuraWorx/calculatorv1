@@ -90,7 +90,7 @@ jobs:
         echo "🚀 Deploying version ${{ github.ref_name }} to PRODUCTION Environment..."
         echo "📦 Building application..."
         echo "🔧 Installing dependencies..."
-        echo "🚀 Starting PROD deployment..."
+        echo "🚀 Starting PROD deployment"
         echo "✅ PROD Deploy done!"
         echo ""
         echo "🌐 Production Environment: https://prod-calculator-api.example.com"
