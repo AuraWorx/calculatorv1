@@ -38,6 +38,8 @@ def calculate(a: Union[int, float], b: Union[int, float], operation: str) -> Uni
         if b == 0:
             raise ValueError("Division by zero is not allowed")
         return a / b
+    elif operation == "power":
+        return a ** b
     else:
         raise ValueError(f"Unsupported operation: {operation}")
 
@@ -48,7 +50,8 @@ async def root():
     return {
         "message": "Calculator API",
         "version": "1.0.0",
-        "endpoints": ["/calculate", "/health"]
+        "endpoints": ["/calculate", "/health"],
+        "supported_operations": ["add", "subtract", "multiply", "divide", "power"]
     }
 
 
