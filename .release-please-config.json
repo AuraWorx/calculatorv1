@@ -1,0 +1,13 @@
+{
+  "packages": {
+    ".": {
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "python"
+    }
+  },
+  "bootstrap-sha": "bootstrap-sha",
+  "release-type": "python",
+  "include-component-in-tag": false,
+  "tag-separator": "@",
+  "release-as": "1.0.0"
+}

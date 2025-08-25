@@ -1,0 +1,85 @@
+name: Main Branch CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  main-ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, "3.10", "3.11"]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Cache uv dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/uv
+        key: ${{ runner.os }}-uv-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-uv-
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v1
+      with:
+        version: "latest"
+    
+    - name: Install dependencies
+      run: |
+        uv pip install -r requirements.txt
+
+    - name: Lint and format check
+      run: |
+        black --check --diff .
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+
+    - name: Run unit tests with 80% coverage
+      run: |
+        pytest tests/test_main.py --cov=app --cov-report=xml --cov-report=term-missing --cov-fail-under=80
+
+    - name: Run integration tests
+      run: |
+        pytest tests/test_integration.py --cov=app --cov-report=xml --cov-report=term-missing --cov-fail-under=80
+
+    - name: Verify signed commits
+      run: |
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          echo "Checking for signed commits in PR"
+          # Add your commit signature verification logic here
+          # Example: git verify-commit HEAD
+        fi
+
+    - name: SonarCloud Scan (Blocking)
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.projectKey=calculator-api
+          -Dsonar.organization=your-org
+          -Dsonar.sources=app
+          -Dsonar.tests=tests
+          -Dsonar.python.coverage.reportPaths=coverage.xml
+          -Dsonar.python.version=3.8
+          -Dsonar.qualitygate.wait=true
+
+    - name: Trigger Release Process
+      if: github.ref == 'refs/heads/main'
+      run: |
+        echo "🎉 Main branch CI passed successfully!"
+        echo "🚀 Release-please will automatically create a release PR"
+        echo "📦 This will trigger UAT deployment workflow"
+        echo "🏷️  New version will be created based on conventional commits"

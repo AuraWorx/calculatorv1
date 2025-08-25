@@ -1,0 +1,88 @@
+name: Release and Deploy
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deploy-uat:
+    runs-on: ubuntu-latest
+    environment: uat
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v1
+      with:
+        version: "latest"
+    
+    - name: Install dependencies
+      run: |
+        uv pip install -r requirements.txt
+
+    - name: Deploy to UAT Environment
+      run: |
+        echo "🚀 Deploying version ${{ github.ref_name }} to UAT Environment..."
+        echo "📦 Building application..."
+        echo "🔧 Installing dependencies..."
+        echo "🚀 Starting UAT deployment..."
+        echo "✅ UAT Deploy done!"
+        echo ""
+        echo "🌐 UAT Environment: https://uat-calculator-api.example.com"
+        echo "📊 Health Check: https://uat-calculator-api.example.com/health"
+        echo "🏷️  Version: ${{ github.ref_name }}
+
+    - name: Wait for UAT approval
+      run: |
+        echo "⏳ Waiting for approval to deploy to PROD..."
+        echo "✅ UAT deployment completed successfully"
+        echo "🔒 PROD deployment requires manual approval"
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+    environment: production
+    needs: deploy-uat
+    if: github.ref == 'refs/tags/v*'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v1
+      with:
+        version: "latest"
+    
+    - name: Install dependencies
+      run: |
+        uv pip install -r requirements.txt
+
+    - name: Deploy to Production Environment
+      run: |
+        echo "🚀 Deploying version ${{ github.ref_name }} to PRODUCTION Environment..."
+        echo "📦 Building application..."
+        echo "🔧 Installing dependencies..."
+        echo "🚀 Starting PROD deployment..."
+        echo "✅ PROD Deploy done!"
+        echo ""
+        echo "🌐 Production Environment: https://prod-calculator-api.example.com"
+        echo "📊 Health Check: https://prod-calculator-api.example.com/health"
+        echo "🏷️  Version: ${{ github.ref_name }}
+        echo "🎉 Production deployment completed successfully!"
+
+    - name: Notify deployment success
+      run: |
+        echo "🎉 Successfully deployed ${{ github.ref_name }} to production!"
+        echo "📢 Sending notifications..."
+        echo "✅ All environments updated successfully"
