@@ -19,11 +19,12 @@ jobs:
           echo "Ref: ${{ github.ref }}"
           echo "SHA: ${{ github.sha }}"
           echo "Branch: ${{ github.ref_name }}"
+          echo "Working directory: $(pwd)"
+          echo "Files in current directory:"
+          ls -la
+          echo "Release-please config:"
+          cat .release-please-config.json
 
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         with:
           release-type: python
-          package-name: calculator-api
-          bump-minor-pre-major: true
-          bump-patch-for-minor-pre-major: true
-          include-v-in-tag: true
