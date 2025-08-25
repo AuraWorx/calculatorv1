@@ -10,8 +10,15 @@ on:
 jobs:
   release-please:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
     steps:
+      - name: Check PR merge status
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "PR merged: ${{ github.event.pull_request.merged }}"
+          echo "PR state: ${{ github.event.pull_request.state }}"
+          echo "Base branch: ${{ github.base_ref }}"
+          echo "Head branch: ${{ github.head_ref }}"
+
       - uses: google-github-actions/release-please-action@v4
         with:
           release-type: python
