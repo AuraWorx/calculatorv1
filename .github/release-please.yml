@@ -3,10 +3,14 @@ name: Release Please
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
+    types: [closed]
 
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     steps:
       - uses: google-github-actions/release-please-action@v4
         with:
