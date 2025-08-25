@@ -23,8 +23,12 @@ jobs:
       with:
         version: "latest"
     
+    - name: Create virtual environment
+      run: uv venv
+
     - name: Install dependencies
       run: |
+        source .venv/bin/activate
         uv pip install -r requirements.txt
 
     - name: Deploy to UAT Environment
@@ -37,7 +41,7 @@ jobs:
         echo ""
         echo "🌐 UAT Environment: https://uat-calculator-api.example.com"
         echo "📊 Health Check: https://uat-calculator-api.example.com/health"
-        echo "🏷️  Version: ${{ github.ref_name }}
+        echo "🏷️  Version: ${{ github.ref_name }}"
 
     - name: Wait for UAT approval
       run: |
@@ -64,8 +68,12 @@ jobs:
       with:
         version: "latest"
     
+    - name: Create virtual environment
+      run: uv venv
+
     - name: Install dependencies
       run: |
+        source .venv/bin/activate
         uv pip install -r requirements.txt
 
     - name: Deploy to Production Environment
@@ -78,7 +86,7 @@ jobs:
         echo ""
         echo "🌐 Production Environment: https://prod-calculator-api.example.com"
         echo "📊 Health Check: https://prod-calculator-api.example.com/health"
-        echo "🏷️  Version: ${{ github.ref_name }}
+        echo "🏷️  Version: ${{ github.ref_name }}"
         echo "🎉 Production deployment completed successfully!"
 
     - name: Notify deployment success
