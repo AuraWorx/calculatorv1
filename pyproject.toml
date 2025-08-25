@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "calculator-api"
-version = "1.0.0"
+version = "0.1.0"
 description = "A simple calculator API with comprehensive testing and CI/CD"
 authors = [{name = "Developer", email = "dev@example.com"}]
 readme = "README.md"
