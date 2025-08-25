@@ -5,7 +5,7 @@
       "release-type": "python"
     }
   },
-  "bootstrap-sha": "HEAD",
+  "bootstrap-sha": "bootstrap-sha",
   "release-type": "python",
   "include-component-in-tag": false,
   "tag-separator": "@",
