@@ -13,6 +13,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Debug information
+      run: |
+        echo "🚀 Release workflow triggered!"
+        echo "Event name: ${{ github.event_name }}"
+        echo "Ref: ${{ github.ref }}"
+        echo "Ref name: ${{ github.ref_name }}"
+        echo "SHA: ${{ github.sha }}"
+        echo "Tag: ${{ github.ref_name }}"
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -51,7 +60,7 @@ jobs:
 
   deploy-prod:
     runs-on: ubuntu-latest
-    environment: production
+    environment: prod
     needs: deploy-uat
     if: github.ref == 'refs/tags/v*'
     steps:
